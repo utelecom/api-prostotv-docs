@@ -1,0 +1,332 @@
+#%RAML 1.0
+title: ProstoTV
+version: 1
+baseUri: https://api.prosto.tv/v1
+mediaType: application/json
+
+securitySchemes:
+  bearer:
+    type: x-bearer
+    describedBy:
+      headers:
+        Authorization:
+          description: Заголовок для авторизации по токену
+          example: Bearer 00112233445566778899aabbccddeeff
+
+types:
+  Bundle:
+    type: object
+    properties:
+      id: integer
+      service_id: integer
+      main: [0, 1]
+      bundles: array
+      name_ru: string
+      name_uk: string
+  Service:
+    type: object
+    properties:
+      id: integer
+      created: datetime
+      name_ru: string
+      name_uk: string
+      cost: number
+      start?: date-only
+      stop?: date-only
+  Device:
+    type: object
+    properties:
+      id: string
+      created: datetime
+      updated: datetime
+      password: string
+      device: string
+  Playlist:
+    type: object
+    properties:
+      id: string
+      created: datetime
+      updated: datetime
+      genres: [0, 1]
+      comment: string
+      ip: string
+  Token:
+    type: object
+    properties:
+      token: string
+  Error:
+    type: object
+    properties:
+      code: integer
+      message: string
+
+/objects:
+  securedBy: bearer
+  post:
+    description: Добавление пользователя
+    body:
+      type: object
+      properties:
+        first_name?: string
+        middle_name?: string
+        last_name?: string
+    responses:
+      201:
+        description: Пользователь добавлен
+        body:
+          type: object
+          example: |
+            {
+              "id": 123456,
+              "status": "active",
+              "balance": 0,
+              "bonus": 0,
+              "bundles": [],
+              "services": [],
+              "devices": [],
+              "playlists": []
+            }
+  /{id}:
+    securedBy: bearer
+    get:
+      description: Получение данных пользователя
+      responses:
+        200:
+          body:
+            type: object
+            properties:
+              id: integer
+              status: ['none', 'active', 'blocked', 'disconnected', 'deleted']
+              balance: number
+              bonus: number
+              bundles: array
+              services: array
+              devices: array
+              playlists: array
+            example: |
+              {
+                "id": 123456,
+                "status": "active",
+                "balance": 0,
+                "bonus": 0,
+                "bundles": [
+                  {
+                    "id": 1,
+                    "service_id": 40,
+                    "main": 1,
+                    "bundles": [],
+                    "name_ru": "Украина",
+                    "name_uk": "Україна"
+                  },
+                  {
+                    "id": 2,
+                    "service_id": 50,
+                    "main": 1,
+                    "bundles": [1],
+                    "name_ru": "Вселенная",
+                    "name_uk": "Всесвіт"
+                  }
+                ],
+                "services": [
+                  {
+                    "id": 50,
+                    "created": "2018-11-01 01:00:14",
+                    "name_ru": "IPTV Вселенная",
+                    "name_uk": "IPTV Всесвіт",
+                    "cost": 79,
+                    "stop": "2019-01-01"
+                  }
+                ],
+                "devices": [
+                  {
+                    "id": "123456_3",
+                    "created": "2018-11-01 02:01:04",
+                    "updated": "2018-12-08 19:54:17",
+                    "password": "520630",
+                    "device": "M01PR100"
+                  }
+                ],
+                "playlists": [
+                  {
+                    "id": "secret",
+                    "created": "2018-12-01 12:14:34",
+                    "updated": "2018-12-08 19:54:17",
+                    "genres": 1,
+                    "comment": "Домашний ПК",
+                    "ip": "90.100.110.120"
+                  }
+                ]
+              }
+    /devices:
+      securedBy: bearer
+      post:
+        description: Добавление устройства
+        responses:
+          201:
+            description: Устройство добавлено
+            body:
+              type: Device
+              example: |
+                {
+                  "id": "123456_3",
+                  "created": "2018-11-01 02:01:04",
+                  "updated": "2018-11-01 02:01:04",
+                  "password": "520630",
+                  "device": ""
+                }
+          406:
+            description: Достугнут лимит
+            body:
+              type: Error
+      /{device_id}:
+        securedBy: bearer
+        delete:
+          description: Удаление устройства
+          responses:
+            200:
+              description: Устройство удален
+            400:
+              description: Некорректный запрос
+              body:
+                type: Error
+            404:
+              description: Устройство не найдено
+              body:
+                type: Error
+    /operations:
+      securedBy: bearer
+      post:
+        description: Проведение операции
+        body:
+          type: object
+          properties:
+            id: integer
+            sum: number
+          example: |
+            {
+              "id": 20,
+              "sum": 120.0
+            }
+        responses:
+          201:
+            description: Операция проведена
+          400:
+            description: Некорректный запрос
+            body:
+              type: Error
+          403:
+            description: Указанный тип операции не разрешен
+            body:
+              type: Error
+          404:
+            description: Указанный тип операции не найден
+            body:
+              type: Error
+          500:
+            description: Внутренняя ошибка
+            body:
+              type: Error
+    /playlists:
+      securedBy: bearer
+      post:
+        description: Добавление плейлиста
+        responses:
+          201:
+            description: Плейлист добавлен
+            body:
+              type: Playlist
+              example: |
+                {
+                  "id": "secret",
+                  "created": "2018-12-01 12:14:34",
+                  "updated": "2018-12-01 12:14:34",
+                  "genres": 1,
+                  "comment": "",
+                  "ip": ""
+                }
+          406:
+            description: Достугнут лимит
+            body:
+              type: Error
+      /{playlist_id}:
+        securedBy: bearer
+        delete:
+          description: Удаление плейлиста
+          responses:
+            200:
+              description: Плейлист удален
+            400:
+              description: Некорректный запрос
+              body:
+                type: Error
+            404:
+              description: Плейлист не найден
+              body:
+                type: Error
+    /services:
+      securedBy: bearer
+      post:
+        description: Активация услуги
+        body:
+          type: object
+          properties:
+            id: integer
+        responses:
+          201:
+            description: Услуга активирована
+            body:
+              type: Service
+              example: |
+                {
+                  "id": 50,
+                  "created": "2018-11-01 01:00:14",
+                  "name_ru": "IPTV Вселенная",
+                  "name_uk": "IPTV Всесвіт",
+                  "cost": 79
+                }
+          400:
+            description: Некорректный запрос
+            body:
+              type: Error
+          402:
+            description: Недостаточно средств
+            body:
+              type: Error
+          403:
+            description: Нет прав для активации указанной услуги
+            body:
+              type: Error
+          404:
+            description: Услуга не найдена
+            body:
+              type: Error
+          500:
+            description: Внутренняя ошибка
+            body:
+              type: Error
+
+/token:
+  post:
+    description: Получение токена
+    body:
+      type: object
+      properties:
+        login: string
+        password: string
+    responses:
+      201:
+        description: Токен создан
+        body:
+          type: Token
+          example: |
+            {
+              "token": "00112233445566778899aabbccddeeff"
+            }
+      400:
+        description: Некорректный запрос, см. дополнительную информацию в ответе
+        body:
+          type: Error
+      404:
+        description: Указанная пара логин/пароль не найдена
+        body:
+          type: Error
