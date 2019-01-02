@@ -18,7 +18,6 @@ types:
     type: object
     properties:
       id: integer
-      service_id: integer
       main: [0, 1]
       bundles: array
       name_ru: string
@@ -111,18 +110,16 @@ types:
                 "bonus": 0,
                 "bundles": [
                   {
-                    "id": 1,
-                    "service_id": 40,
+                    "id": 40,
                     "main": 1,
                     "bundles": [],
                     "name_ru": "Украина",
                     "name_uk": "Україна"
                   },
                   {
-                    "id": 2,
-                    "service_id": 50,
+                    "id": 50,
                     "main": 1,
-                    "bundles": [1],
+                    "bundles": [40],
                     "name_ru": "Вселенная",
                     "name_uk": "Всесвіт"
                   }
