@@ -53,6 +53,14 @@ types:
     type: object
     properties:
       token: string
+  Operation:
+    type: object
+    properties:
+      id: integer
+      transaction_id: integer
+      object_id: integer
+      created: datetime
+      sum: number
   Error:
     type: object
     properties:
@@ -207,6 +215,16 @@ types:
         responses:
           201:
             description: Операция проведена
+            body:
+              type: Operation
+              example: |
+                {
+                  "id": 123456,
+                  "transaction_id": 123456,
+                  "object_id": 123456,
+                  "created": "2018-12-01 10:10:43",
+                  "sum": 79.00
+                }
           400:
             description: Некорректный запрос
             body:
