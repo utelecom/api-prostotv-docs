@@ -22,6 +22,37 @@ types:
       bundles: array
       name_ru: string
       name_uk: string
+  Device:
+    type: object
+    properties:
+      id: string
+      created: datetime
+      updated: datetime
+      password: string
+      device: string
+  Error:
+    type: object
+    properties:
+      code: integer
+      message: string
+  Operation:
+    type: object
+    properties:
+      id: integer
+      transaction_id: integer
+      object_id: integer
+      created: datetime
+      sum: number
+      balance: number
+  Playlist:
+    type: object
+    properties:
+      id: string
+      created: datetime
+      updated: datetime
+      genres: [0, 1]
+      comment: string
+      ip: string
   Service:
     type: object
     properties:
@@ -32,40 +63,10 @@ types:
       cost: number
       start?: date-only
       stop?: date-only
-  Device:
-    type: object
-    properties:
-      id: string
-      created: datetime
-      updated: datetime
-      password: string
-      device: string
-  Playlist:
-    type: object
-    properties:
-      id: string
-      created: datetime
-      updated: datetime
-      genres: [0, 1]
-      comment: string
-      ip: string
   Token:
     type: object
     properties:
       token: string
-  Operation:
-    type: object
-    properties:
-      id: integer
-      transaction_id: integer
-      object_id: integer
-      created: datetime
-      sum: number
-  Error:
-    type: object
-    properties:
-      code: integer
-      message: string
 
 /objects:
   securedBy: bearer
@@ -205,11 +206,11 @@ types:
         body:
           type: object
           properties:
-            id: integer
+            operation_id: integer
             sum: number
           example: |
             {
-              "id": 20,
+              "operation_id": 20,
               "sum": 120.0
             }
         responses:
@@ -223,7 +224,8 @@ types:
                   "transaction_id": 123456,
                   "object_id": 123456,
                   "created": "2018-12-01 10:10:43",
-                  "sum": 79.00
+                  "sum": 79.00,
+                  "balance": 79.00
                 }
           400:
             description: Некорректный запрос
