@@ -343,16 +343,24 @@ types:
                 "name_ru": "IPTV Вселенная",
                 "channels": [
                   {
-                    0: "Эра",
-                    1: "ICTV",
-                    2: "Euronews",
-                    3: "ЕвроКино",
-                    4: "Канал 1+1"
+                    "number": 1,
+                    "name_uk": "Україна",
+                    "name_ru": "Украина"
+                  },
+                  {
+                    "number": 2,
+                    "name_uk": "Інтер",
+                    "name_ru": "Интер"
+                  },
+                  {
+                    "number": 6,
+                    "name_uk": "Новий канал",
+                    "name_ru": "Новый канал"
                   }
                 ]
               }
         404:
-          description: В указанном id услуги каналов не найдено
+          description: По заданому id услуги каналов не найдено
           body:
             type: Error
 /token:
