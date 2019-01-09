@@ -321,7 +321,40 @@ types:
             description: Внутренняя ошибка
             body:
               type: Error
-
+/bundles:
+  securedBy: bearer
+  /{id}:
+    securedBy: bearer
+    get:
+      description: Получение списка каналов
+      responses:
+        200:
+          body:
+            type: object
+            properties:
+              id: integer
+              name_uk: string
+              name_ru: string
+              channels: array
+            example: |
+              {
+                "id": 108,
+                "name_uk": "IPTV Всесвіт",
+                "name_ru": "IPTV Вселенная",
+                "channels": [
+                  {
+                    0: "Эра",
+                    1: "ICTV",
+                    2: "Euronews",
+                    3: "ЕвроКино",
+                    4: "Канал 1+1"
+                  }
+                ]
+              }
+        404:
+          description: В указанном id услуги каналов не найдено
+          body:
+            type: Error
 /token:
   post:
     description: Получение токена
