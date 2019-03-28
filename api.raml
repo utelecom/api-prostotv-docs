@@ -200,6 +200,30 @@ types:
               description: Устройство не найдено
               body:
                 type: Error
+    /workoncredit:
+      securedBy: bearer
+      post:
+        description: Активация работы в кредит
+        responses:
+          200:
+            description: Работа в кредит активирована
+            body:
+              type: object
+              example: |
+                {
+                  "id": "123456",
+                  "status": "active",
+                  "date_start": "2018-11-01 02:01:04",
+                  "date_stop": "2018-11-07 02:01:04"
+                }
+          400:
+            description: Не удалось активировать услугу
+            body:
+              type: Error
+          402:
+            description: Активация услуги недоступна
+            body:
+              type: Error
     /operations:
       securedBy: bearer
       post:
