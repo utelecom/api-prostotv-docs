@@ -30,6 +30,11 @@ types:
       updated: datetime
       password: string
       device: string
+  Devices:
+    type: object
+    properties:
+      id: string
+      comment: string
   Error:
     type: object
     properties:
@@ -53,6 +58,12 @@ types:
       genres: [0, 1]
       comment: string
       ip: string
+  Playlists:
+    type: object
+    properties:
+      id: string
+      comment: string
+      genres: [0, 1]
   Service:
     type: object
     properties:
@@ -67,7 +78,11 @@ types:
     type: object
     properties:
       token: string
-
+  Status:
+    type: object
+    properties:
+      id: string
+      status: ["active", "disconnected"]
 /objects:
   securedBy: bearer
   post:
@@ -150,7 +165,8 @@ types:
                     "created": "2018-11-01 02:01:04",
                     "updated": "2018-12-08 19:54:17",
                     "password": "520630",
-                    "device": "M01PR100"
+                    "device": "M01PR100",
+                    "comment": "Телевизор на кухне"
                   }
                 ],
                 "playlists": [
@@ -160,7 +176,8 @@ types:
                     "updated": "2018-12-08 19:54:17",
                     "genres": 1,
                     "comment": "Домашний ПК",
-                    "ip": "90.100.110.120"
+                    "ip": "90.100.110.120",
+                    "url": "http://my.prosto.tv/secret.m3u"
                   }
                 ]
               }
@@ -200,6 +217,32 @@ types:
               description: Устройство не найдено
               body:
                 type: Error
+      /{devices_id}:
+        securedBy: bearer
+        put:
+          description: Добавление комментария к устройству
+          body:
+            properties:
+              comment: string
+          responses:
+            201:
+              description: Комментарий добавлено
+              body:
+                type: Devices
+                example: |
+                  {
+                    "id": "123456_3",
+                    "comment": "Телевизор на кухне"
+                  }
+            400:
+              description: Неверный id устройства
+              body:
+                type: Error
+            204:
+              description: Не задан комментарий
+              body:
+                type: Error
+
     /workoncredit:
       securedBy: bearer
       post:
@@ -207,15 +250,6 @@ types:
         responses:
           200:
             description: Работа в кредит активирована
-            body:
-              type: object
-              example: |
-                {
-                  "id": "123456",
-                  "status": "active",
-                  "date_start": "2018-11-01 02:01:04",
-                  "date_stop": "2018-11-07 02:01:04"
-                }
           400:
             description: Не удалось активировать услугу
             body:
@@ -305,6 +339,67 @@ types:
               description: Плейлист не найден
               body:
                 type: Error
+      /{playlists_id}:
+        securedBy: bearer
+        put:
+          description: Добавление комментария, включение выключение группировки по жанрам
+          body:
+            properties:
+              comment: string
+              genres: integer
+          responses:
+            201:
+              description: Плейлист изменен
+              body:
+                type: Playlists
+                example: |
+                  {
+                    "id": secret,
+                    "comment": "Домашний ПК",
+                    "genres": 1
+                  }
+            400:
+              description: Не указаны параметры
+              body:
+                type: Error
+    /status:
+      securedBy: bearer
+      post:
+        description: Отключение/включение учетной записи
+        body:
+          type: object
+          properties:
+            status: string
+        responses:
+          201:
+            description: Статус учетной записи изменен
+            body:
+              type: Status
+              example: |
+                {
+                  "id": 123456,
+                  "status": "disconnected"
+                }
+          400:
+            description: Некорректный запрос
+            body:
+              type: Error
+          203:
+            description: Неверный статус
+            body:
+              type: Error
+          304:
+            description: Статус уже установлен
+            body:
+              type: Error
+          402:
+            description: Недостаточно средств
+            body:
+              type: Error
+          500:
+            description: Внутренняя ошибка
+            body:
+              type: Error
     /services:
       securedBy: bearer
       post:
@@ -313,6 +408,7 @@ types:
           type: object
           properties:
             id: integer
+            auto_renewal: integer
         responses:
           201:
             description: Услуга активирована
@@ -324,6 +420,7 @@ types:
                   "created": "2018-11-01 01:00:14",
                   "name_ru": "IPTV Вселенная",
                   "name_uk": "IPTV Всесвіт",
+                  "auto_renewal": 1,
                   "cost": 79
                 }
           400:
