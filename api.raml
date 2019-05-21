@@ -82,7 +82,50 @@ types:
     type: object
     properties:
       id: string
-      status: ["active", "disconnected"]
+      status:
+        enum: [active, disconnected]
+
+/bundles:
+  /{id}:
+    get:
+      description: Получение списка каналов
+      responses:
+        200:
+          body:
+            type: object
+            properties:
+              id: integer
+              name_uk: string
+              name_ru: string
+              channels: array
+            example: |
+              {
+                "id": 108,
+                "name_uk": "IPTV Всесвіт",
+                "name_ru": "IPTV Вселенная",
+                "channels": [
+                  {
+                    "number": 1,
+                    "name_uk": "Україна",
+                    "name_ru": "Украина"
+                  },
+                  {
+                    "number": 2,
+                    "name_uk": "Інтер",
+                    "name_ru": "Интер"
+                  },
+                  {
+                    "number": 6,
+                    "name_uk": "Новий канал",
+                    "name_ru": "Новый канал"
+                  }
+                ]
+              }
+        404:
+          description: По заданому id услуги каналов не найдено
+          body:
+            type: Error
+
 /objects:
   securedBy: bearer
   post:
@@ -217,8 +260,6 @@ types:
               description: Устройство не найдено
               body:
                 type: Error
-      /{devices_id}:
-        securedBy: bearer
         put:
           description: Добавление комментария к устройству
           body:
@@ -339,8 +380,6 @@ types:
               description: Плейлист не найден
               body:
                 type: Error
-      /{playlists_id}:
-        securedBy: bearer
         put:
           description: Добавление комментария, включение выключение группировки по жанрам
           body:
@@ -443,48 +482,7 @@ types:
             description: Внутренняя ошибка
             body:
               type: Error
-/bundles:
-  securedBy: bearer
-  /{id}:
-    securedBy: bearer
-    get:
-      description: Получение списка каналов
-      responses:
-        200:
-          body:
-            type: object
-            properties:
-              id: integer
-              name_uk: string
-              name_ru: string
-              channels: array
-            example: |
-              {
-                "id": 108,
-                "name_uk": "IPTV Всесвіт",
-                "name_ru": "IPTV Вселенная",
-                "channels": [
-                  {
-                    "number": 1,
-                    "name_uk": "Україна",
-                    "name_ru": "Украина"
-                  },
-                  {
-                    "number": 2,
-                    "name_uk": "Інтер",
-                    "name_ru": "Интер"
-                  },
-                  {
-                    "number": 6,
-                    "name_uk": "Новий канал",
-                    "name_ru": "Новый канал"
-                  }
-                ]
-              }
-        404:
-          description: По заданому id услуги каналов не найдено
-          body:
-            type: Error
+
 /token:
   post:
     description: Получение токена
