@@ -224,6 +224,26 @@ types:
                   }
                 ]
               }
+    delete:
+      description: Удаление учетки
+      responses:
+        200:
+          description: Учетка удалена
+          body:
+            type: object
+            example: |
+              {
+                "id": "123456",
+                "status": "deleted"
+              }
+        305:
+          description: Учетка удалена не полностью
+          body:
+            type: Error
+        404:
+          description: Учетка уже удалена 
+          body:
+            type: Error
     /devices:
       securedBy: bearer
       post:
