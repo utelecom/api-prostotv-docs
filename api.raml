@@ -58,6 +58,7 @@ types:
       genres: [0, 1]
       comment: string
       ip: string
+      url: string
   Playlists:
     type: object
     properties:
@@ -241,7 +242,7 @@ types:
           body:
             type: Error
         404:
-          description: Учетка уже удалена 
+          description: Учетка уже удалена
           body:
             type: Error
     /devices:
@@ -379,7 +380,8 @@ types:
                   "updated": "2018-12-01 12:14:34",
                   "genres": 1,
                   "comment": "",
-                  "ip": ""
+                  "ip": "",
+                  "url": "http://my.prosto.tv/secret.m3u"
                 }
           406:
             description: Достугнут лимит
