@@ -505,6 +505,22 @@ types:
             body:
               type: Error
 
+/services:
+  securedBy: bearer
+  /{id}/accounts:
+    get:
+      description: Получить список аккаунтов, у которых включена указанная услуга
+      responses:
+        200:
+          body:
+            type: object
+            properties:
+              accounts: array
+            example: |
+              {
+                "accounts": [ 1, 2, 3, ...],
+              }
+
 /token:
   post:
     description: Получение токена
