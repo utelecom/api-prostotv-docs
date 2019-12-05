@@ -505,11 +505,25 @@ types:
             body:
               type: Error
 
-/services:
-  securedBy: bearer
-  /{id}/accounts:
+/search:
+  /accounts/service/{id}:
+    securedBy: bearer
     get:
       description: Получить список аккаунтов, у которых включена указанная услуга
+      responses:
+        200:
+          body:
+            type: object
+            properties:
+              accounts: array
+            example: |
+              {
+                "accounts": [ 1, 2, 3, ...],
+              }
+  /accounts/phone/{phone}:
+    securedBy: bearer
+    get:
+      description: Получить список аккаунтов, у которых есть указаный номер телефона
       responses:
         200:
           body:
