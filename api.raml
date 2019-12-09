@@ -138,6 +138,7 @@ types:
         middle_name?: string
         last_name?: string
         note?: string
+        phone?: string
     responses:
       201:
         description: Пользователь добавлен
@@ -167,6 +168,7 @@ types:
               status: ['none', 'active', 'blocked', 'disconnected', 'deleted']
               balance: number
               bonus: number
+              contacts: array
               bundles: array
               services: array
               devices: array
@@ -177,6 +179,7 @@ types:
                 "status": "active",
                 "balance": 0,
                 "bonus": 0,
+                "contacts": [ "012 3456789", "098 7654321"...]
                 "bundles": [
                   {
                     "id": 40,
@@ -504,6 +507,56 @@ types:
             description: Внутренняя ошибка
             body:
               type: Error
+    /contacts:
+      securedBy: bearer
+      post:
+        description: Добавление номера телефона
+        body:
+          type: object
+          properties:
+            phone: string
+        responses:
+          201:
+            description: Номер добавлен
+            body:
+              type: object
+              example: |
+                {
+                  "id": 123456,
+                  "contact": "012 3456789",
+                  "status": "added"
+                }
+          400:
+            description: Некорректный запрос
+            body:
+              type: Error
+          6:
+            description: Duplicate entry data
+            body:
+              type: Error
+      /{phone}:
+        securedBy: bearer
+        delete:
+          description: Удаление номера телефона
+          responses:
+            200:
+              description: Номер удален
+              body:
+                type: object
+                example: |
+                  {
+                    "id": 123456,
+                    "contact": "012 3456789",
+                    "status": "deleted"
+                  }
+            400:
+              description: Некорректный запрос
+              body:
+                type: Error
+            406:
+              description: No phone number found
+              body:
+                type: Error
 
 /search:
   /accounts/service/{id}:
