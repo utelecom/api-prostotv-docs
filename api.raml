@@ -147,6 +147,7 @@ types:
           example: |
             {
               "id": 123456,
+              "password": 12345678,
               "status": "active",
               "balance": 0,
               "bonus": 0,
@@ -561,7 +562,31 @@ types:
               description: No phone number found
               body:
                 type: Error
-
+    /password:
+      securedBy: bearer
+      put:
+        description: Изменение пароля. Формат пароля минимум 8 символов
+        body:
+          properties:
+            password?: string
+        responses:
+          200:
+            description: Пароль изменен
+            body:
+              type: object
+              example:
+                {
+                  "id": 123456,
+                  "newPassword": "12345678"
+                }
+          400:
+            description: Некорректный пароль
+            body:
+              type: Error
+          500:
+            description: Внутренняя ошибка
+            body:
+              type: Error
 /search:
   /accounts/service/{id}:
     securedBy: bearer
