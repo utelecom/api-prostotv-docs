@@ -88,47 +88,6 @@ types:
       status:
         enum: [active, disconnected]
 
-/bundles:
-  /{id}:
-    get:
-      description: Получение списка каналов
-      responses:
-        200:
-          body:
-            type: object
-            properties:
-              id: integer
-              name_uk: string
-              name_ru: string
-              channels: array
-            example: |
-              {
-                "id": 108,
-                "name_uk": "IPTV Всесвіт",
-                "name_ru": "IPTV Вселенная",
-                "channels": [
-                  {
-                    "number": 1,
-                    "name_uk": "Україна",
-                    "name_ru": "Украина"
-                  },
-                  {
-                    "number": 2,
-                    "name_uk": "Інтер",
-                    "name_ru": "Интер"
-                  },
-                  {
-                    "number": 6,
-                    "name_uk": "Новий канал",
-                    "name_ru": "Новый канал"
-                  }
-                ]
-              }
-        404:
-          description: По заданому id услуги каналов не найдено
-          body:
-            type: Error
-
 /objects:
   securedBy: bearer
   post:
@@ -605,34 +564,27 @@ types:
             body:
               type: Error
 /search:
-  /accounts/service/{id}:
+  /accounts:
     securedBy: bearer
-    get:
-      description: Получить список аккаунтов, у которых включена указанная услуга
+    post:
+      description: Получить список точек аккаунтов согласно заданнім условиям
+      body:
+        type: object
+        properties:
+          parameter: string phone|service_id|first_name|last_name|middle_name
+          value: string
       responses:
         200:
           body:
             type: object
             properties:
-              accounts: array
-            example: |
-              {
-                "accounts": [ 1, 2, 3, ...],
-              }
-  /accounts/phone/{phone}:
-    securedBy: bearer
-    get:
-      description: Получить список аккаунтов, у которых есть указаный номер телефона
-      responses:
-        200:
+              property: string
+              value: string
+              accounts: integer[]
+        500:
+          description: Внутренняя ошибка
           body:
-            type: object
-            properties:
-              accounts: array
-            example: |
-              {
-                "accounts": [ 1, 2, 3, ...],
-              }
+            type: Error
 
 /tokens:
   post:
