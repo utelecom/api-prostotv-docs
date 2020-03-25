@@ -563,6 +563,26 @@ types:
             description: Внутренняя ошибка
             body:
               type: Error
+    /token:
+      securedBy: bearer
+      post:
+        description: Создание временного токена для авторизации устройства
+        responses:
+          200:
+            description: Токен создан, время жизни токена 2 минуты
+            body:
+              type: object
+              example:
+                {
+                  "account_id": 123456,
+                  "date_create": "2020-03-25 15:42:37",
+                  "date_expire": "2020-03-25 15:44:37",
+                  "token": "01234"
+                }
+          500:
+            description: Внутренняя ошибка
+            body:
+              type: Error
 /search:
   /accounts:
     securedBy: bearer
