@@ -3,6 +3,7 @@ title: ProstoTV
 version: 1
 baseUri: https://api.prosto.tv/v1
 mediaType: application/json
+types: !include types.raml
 
 securitySchemes:
   bearer:
@@ -12,81 +13,6 @@ securitySchemes:
         Authorization:
           description: Заголовок для авторизации по токену
           example: Bearer 00112233445566778899aabbccddeeff
-
-types:
-  Bundle:
-    type: object
-    properties:
-      id: integer
-      main: [0, 1]
-      bundles: array
-      name_ru: string
-      name_uk: string
-  Device:
-    type: object
-    properties:
-      id: string
-      created: datetime
-      updated: datetime
-      password: string
-      device: string
-  Devices:
-    type: object
-    properties:
-      id: string
-      comment: string
-  Error:
-    type: object
-    properties:
-      code: integer
-      message: string
-  Operation:
-    type: object
-    properties:
-      id: integer
-      transaction_id: integer
-      object_id: integer
-      created: datetime
-      sum: number
-      balance: number
-  Playlist:
-    type: object
-    properties:
-      id: string
-      created: datetime
-      updated: datetime
-      genres: [0, 1]
-      comment: string
-      ip: string
-      url: string
-  Playlists:
-    type: object
-    properties:
-      id: string
-      comment?: string
-      genres?: [0, 1]
-      tv_guide?: [0, 1]
-      available_mode?: [1]
-  Service:
-    type: object
-    properties:
-      id: integer
-      created: datetime
-      name_ru: string
-      name_uk: string
-      cost: number
-      start?: date-only
-      stop?: date-only
-  Token:
-    type: object
-    properties:
-      token: string
-  Status:
-    type: object
-    properties:
-      id: string
-      status:
-        enum: [active, disconnected]
 
 /objects:
   securedBy: bearer
@@ -118,8 +44,12 @@ types:
               "devices": [],
               "playlists": []
             }
-  /{id}:
+  /{account_id}:
     securedBy: bearer
+    uriParameters:
+      account_id:
+        type: integer
+        description: Account ID
     get:
       description: Получение данных пользователя
       responses:
@@ -222,7 +152,18 @@ types:
           body:
             type: Error
     /devices:
+      description: Работа с устройствами
       securedBy: bearer
+      get:
+        description: Получение списка всех устройств
+        responses:
+          200:
+            body:
+              properties:
+                devices:
+                  type: array
+                  items: Device
+                  example: !include types/device.json
       post:
         description: Добавление устройства
         responses:
@@ -230,25 +171,23 @@ types:
             description: Устройство добавлено
             body:
               type: Device
-              example: |
-                {
-                  "id": "123456_3",
-                  "created": "2018-11-01 02:01:04",
-                  "updated": "2018-11-01 02:01:04",
-                  "password": "520630",
-                  "device": ""
-                }
+              example: !include types/device.json
           406:
-            description: Достугнут лимит
+            description: Достугнут лимит устройств
             body:
               type: Error
       /{device_id}:
         securedBy: bearer
+        uriParameters:
+          device_id:
+            type: string
+            description: Идентификатор (логин) устройства
+            example: "000000_0"
         delete:
           description: Удаление устройства
           responses:
             200:
-              description: Устройство удален
+              description: Устройство удалено
             400:
               description: Некорректный запрос
               body:
@@ -261,17 +200,13 @@ types:
           description: Добавление комментария к устройству
           body:
             properties:
-              comment: string
+              comment?: string
           responses:
             201:
               description: Комментарий добавлено
               body:
-                type: Devices
-                example: |
-                  {
-                    "id": "123456_3",
-                    "comment": "Телевизор на кухне"
-                  }
+                type: Device
+                example: !include types/device.json
             400:
               description: Неверный id устройства
               body:
@@ -280,7 +215,75 @@ types:
               description: Не задан комментарий
               body:
                 type: Error
-
+    /playlists:
+      description: Управление плейлистами
+      securedBy: bearer
+      get:
+        description: Получение списка всех плейлистов
+        responses:
+          200:
+            body:
+              properties:
+                playlists:
+                  type: array
+                  items: Playlist
+                  example: !include types/playlist.json
+      post:
+        description: Добавление плейлиста
+        responses:
+          201:
+            description: Плейлист добавлен
+            body:
+              type: Playlist
+              example: !include types/playlist.json
+          406:
+            description: Достугнут лимит
+            body:
+              type: Error
+      /{playlist_id}:
+        securedBy: bearer
+        uriParameters:
+          playlist_id:
+            type: string
+            description: Идентификатор (secret) плейлиста
+            example: "xxxxxxxx"
+        delete:
+          description: Удаление плейлиста
+          responses:
+            200:
+              description: Плейлист удален
+            400:
+              description: Некорректный запрос
+              body:
+                type: Error
+            404:
+              description: Плейлист не найден
+              body:
+                type: Error
+        put:
+          description: Добавление комментария, включение выключение группировки по жанрам
+          body:
+            properties:
+              comment?: string
+              genres?: 0|1
+              tv_guide?: 0|1
+              available_mode?:
+                description: Оставить в плейлисте только доступные каналы
+                type: 0|1
+          responses:
+            201:
+              description: Плейлист изменен
+              body:
+                type: Playlist
+                example: !include types/playlist.json
+            400:
+              description: Не указаны параметры
+              body:
+                type: Error
+            500:
+              description: Внутренняя ошибка
+              body:
+                type: Error
     /workoncredit:
       securedBy: bearer
       post:
@@ -340,73 +343,6 @@ types:
             description: Внутренняя ошибка
             body:
               type: Error
-    /playlists:
-      securedBy: bearer
-      post:
-        description: Добавление плейлиста
-        responses:
-          201:
-            description: Плейлист добавлен
-            body:
-              type: Playlist
-              example: |
-                {
-                  "id": "secret",
-                  "created": "2018-12-01 12:14:34",
-                  "updated": "2018-12-01 12:14:34",
-                  "genres": 1,
-                  "comment": "",
-                  "ip": "",
-                  "url": "http://my.prosto.tv/secret.m3u"
-                }
-          406:
-            description: Достугнут лимит
-            body:
-              type: Error
-      /{playlist_id}:
-        securedBy: bearer
-        delete:
-          description: Удаление плейлиста
-          responses:
-            200:
-              description: Плейлист удален
-            400:
-              description: Некорректный запрос
-              body:
-                type: Error
-            404:
-              description: Плейлист не найден
-              body:
-                type: Error
-        put:
-          description: Добавление комментария, включение выключение группировки по жанрам
-          body:
-            properties:
-              comment?: string
-              genres?: integer
-              tv_guide?: integer
-              available_mode?: integer
-          responses:
-            201:
-              description: Плейлист изменен
-              body:
-                type: Playlists
-                example: |
-                  {
-                    "id": secret,
-                    "comment": "Домашний ПК",
-                    "genres": 1
-                    "tv_guide": 1
-                    "available_mode": 1
-                  }
-            400:
-              description: Не указаны параметры
-              body:
-                type: Error
-            500:
-              description: Внутренняя ошибка
-              body:
-                type: Error
     /status:
       securedBy: bearer
       post:

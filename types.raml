@@ -1,0 +1,46 @@
+# Приводим в порядок
+Device: !include types/device.raml
+Playlist: !include types/playlist.raml
+# Старая дока
+Bundle:
+  type: object
+  properties:
+    id: integer
+    main: [0, 1]
+    bundles: array
+    name_ru: string
+    name_uk: string
+Error:
+  type: object
+  properties:
+    code: integer
+    message: string
+Operation:
+  type: object
+  properties:
+    id: integer
+    transaction_id: integer
+    object_id: integer
+    created: datetime
+    sum: number
+    balance: number
+Service:
+  type: object
+  properties:
+    id: integer
+    created: datetime
+    name_ru: string
+    name_uk: string
+    cost: number
+    start?: date-only
+    stop?: date-only
+Token:
+  type: object
+  properties:
+    token: string
+Status:
+  type: object
+  properties:
+    id: string
+    status:
+      enum: [active, disconnected]

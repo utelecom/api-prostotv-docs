@@ -1,0 +1,14 @@
+{
+  "id": "xxxxxxxx",
+  "created": "2020-03-06 09:47:38",
+  "updated": "0000-00-00 00:00:00",
+  "genres": 1,
+  "tv_guide": 1,
+  "comment": "",
+  "ip": "",
+  "url": "http://my.prosto.tv/xxxxxxxx.m3u",
+  "device_id": "",
+  "password": "0000",
+  "parent_control_start": null,
+  "parent_control_end": null
+}

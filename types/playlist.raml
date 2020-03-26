@@ -1,0 +1,15 @@
+#%RAML 1.0 DataType
+type: object
+properties:
+  id: string
+  created: datetime
+  updated: datetime
+  genres: [0, 1]
+  tv_guide: [0, 1]
+  comment: string
+  ip: string
+  url: string
+  device_id: string
+  password: string
+  parent_control_start: integer | nil
+  parent_control_end: integer | nil
