@@ -522,18 +522,32 @@ securitySchemes:
 /search:
   /accounts:
     securedBy: bearer
+    get:
+      description: Получить список всех точек аккаунтов
+      responses:
+        200:
+          body:
+            type: object
+            properties:
+              count: integer
+              accounts: integer[]
+        500:
+          description: Внутренняя ошибка
+          body:
+            type: Error
     post:
       description: Получить список точек аккаунтов согласно заданнім условиям
       body:
         type: object
         properties:
-          parameter: string phone|service_id|first_name|last_name|middle_name
+          parameter: string status|phone|service_id|first_name|last_name|middle_name
           value: string
       responses:
         200:
           body:
             type: object
             properties:
+              count: integer
               property: string
               value: string
               accounts: integer[]
