@@ -102,6 +102,8 @@ securitySchemes:
                     "created": "2018-11-01 01:00:14",
                     "name_ru": "IPTV Вселенная",
                     "name_uk": "IPTV Всесвіт",
+                    "active": 1,
+                    "auto_renewal": 1,
                     "cost": 79,
                     "main": 1,
                     "channels_count": 144,
@@ -401,8 +403,12 @@ securitySchemes:
                   "created": "2018-11-01 01:00:14",
                   "name_ru": "IPTV Вселенная",
                   "name_uk": "IPTV Всесвіт",
+                  "active": 1,
                   "auto_renewal": 1,
-                  "cost": 79
+                  "cost": 79,
+                  "main": 1,
+                  "channels_count": 230,
+                  "bundles": [40],
                 }
           400:
             description: Некорректный запрос
@@ -424,6 +430,46 @@ securitySchemes:
             description: Внутренняя ошибка
             body:
               type: Error
+      /{service_id}:
+        securedBy: bearer
+        delete:
+          description: Отключение услуги
+          body:
+            type: object
+          responses:
+            201:
+              description: Услуга активирована
+              body:
+                type: Service
+                example: |
+                  {
+                    "id": 50,
+                    "name_ru": "IPTV Вселенная",
+                    "name_uk": "IPTV Всесвіт",
+                    "active": 1,
+                    "auto_renewal": 0,
+                    "cost": 79,
+                    "main": 1,
+                    "channels_count": 230,
+                    "bundles": [40],
+                    "stop": "2019-01-01"
+                  }
+            400:
+              description: Некорректный запрос
+              body:
+                type: Error
+            403:
+              description: Нет прав для работы с указанной услуги
+              body:
+                type: Error
+            404:
+              description: Услуга не найдена
+              body:
+                type: Error
+            500:
+              description: Внутренняя ошибка
+              body:
+                type: Error
     /contacts:
       securedBy: bearer
       post:
