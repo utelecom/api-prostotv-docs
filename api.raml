@@ -3,7 +3,7 @@ title: ProstoTV
 version: 1
 baseUri: https://api.prosto.tv/v1
 mediaType: application/json
-types: !include types.raml
+types: !include ./types.raml
 
 securitySchemes:
   bearer:
@@ -26,6 +26,7 @@ securitySchemes:
         last_name?: string
         note?: string
         phone?: string
+        password?: string
     responses:
       201:
         description: Пользователь добавлен
