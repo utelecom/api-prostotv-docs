@@ -602,7 +602,21 @@ securitySchemes:
           description: Внутренняя ошибка
           body:
             type: Error
-
+  /bundles:
+    securedBy: bearer
+    get:
+      description: Получение списка доступных пакетов
+      responses:
+        200:
+          description: Список пакетов для пользователей которые уже созданы или будут созданы по api
+          body:
+            type: array
+            items: Bundles
+            example: !include types/bundle.json
+        500:
+          description: Ошибка сервера, нужно проверить настройки учётки оператора
+          body:
+            type: Error
 /tokens:
   post:
     description: Получение токена
