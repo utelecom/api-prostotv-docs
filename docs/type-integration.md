@@ -13,7 +13,7 @@
 Все следующие запросы нужно выполнять, указав полученный токен в заголовках.
 
 ```http request
-POST https://{host}/v1/tokens
+POST https://<host>/v1/tokens
 Content-Type: application/json
 
 {
