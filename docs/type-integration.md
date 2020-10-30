@@ -13,12 +13,12 @@
 Все следующие запросы нужно выполнять, указав полученный токен в заголовках.
 
 ```http request
-POST https://{{host}}/v1/tokens
+POST https://{host}/v1/tokens
 Content-Type: application/json
 
 {
-    "login": "{{login}}",
-    "password": "{{password}}"
+    "login": "{login}",
+    "password": "{password}"
 }
 ``` 
 
@@ -28,15 +28,15 @@ Content-Type: application/json
 наиболее правдивая информация о доступных услугах - при обращении непосредственно к абоненту:
 
 ```http request
-GET http://{{host}}/v1/objects/{{account_id}}
-Authorization: Bearer {{auth_token}}
+GET http://{host}/v1/objects/{account_id}
+Authorization: Bearer {auth_token}
 ```
 
 Но для случаев, когда абонента еще не существует, но список услуг уже нужен, можно получить список услуг "по умолчанию": 
 
 ```http request
-GET http://{{host}}/v1/search/bundles
-Authorization: Bearer {{auth_token}}
+GET http://{host}/v1/search/bundles
+Authorization: Bearer {auth_token}
 ```
 
 ### Создание нового абонента
@@ -44,8 +44,8 @@ Authorization: Bearer {{auth_token}}
 Ни одно из полей не является обязательным, но крайне рекомендуется для вашего удобства заполнять как можно полнее:
 
 ```http request
-POST https://{{host}}/v1/objects
-Authorization: Bearer {{auth_token}}
+POST https://{host}/v1/objects
+Authorization: Bearer {auth_token}
 Content-Type: application/json
 
 {
@@ -64,8 +64,8 @@ Content-Type: application/json
 доступные пакеты `bundles`, активные пакеты `services`, созданные плейлисты `playlists` и устройства `devices`: 
 
 ```http request
-GET http://{{host}}/v1/objects/{{account_id}}
-Authorization: Bearer {{auth_token}}
+GET http://{host}/v1/objects/{account_id}
+Authorization: Bearer {auth_token}
 ```
 
 ### Включить услугу
@@ -75,8 +75,8 @@ Authorization: Bearer {{auth_token}}
 сумме и количеству дней, оставшихся до конца календарного месяца:
 
 ```http request
-POST https://{{host}}/v1/objects/{{account_id}}/services
-Authorization: Bearer {{auth_token}}
+POST https://{host}/v1/objects/{account_id}/services
+Authorization: Bearer {auth_token}
 Content-Type: application/json
 
 {
@@ -114,8 +114,8 @@ Content-Type: application/json
 т.к. он уже входит в активный "Комфорт":
 
 ```http request
-POST https://{{host}}/v1/objects/{{account_id}}/services
-Authorization: Bearer {{auth_token}}
+POST https://{host}/v1/objects/{account_id}/services
+Authorization: Bearer {auth_token}
 Content-Type: application/json
 
 {
@@ -129,8 +129,8 @@ Content-Type: application/json
 При этом смена услуги на более дорогую "Премиум" пройдет без проблем:
 
 ```http request
-POST https://{{host}}/v1/objects/{{account_id}}/services
-Authorization: Bearer {{auth_token}}
+POST https://{host}/v1/objects/{account_id}/services
+Authorization: Bearer {auth_token}
 Content-Type: application/json
 
 {
@@ -157,8 +157,8 @@ Content-Type: application/json
 Отключить услугу просто:
 
 ```http request
-DELETE https://{{host}}/v1/objects/{{account_id}}/services/127
-Authorization: Bearer {{auth_token}}
+DELETE https://{host}/v1/objects/{account_id}/services/127
+Authorization: Bearer {auth_token}
 ```
 
 ### Плейлисты и устройства
@@ -196,8 +196,8 @@ Authorization: Bearer {{auth_token}}
 поведение.   
 
 ```http request
-DELETE https://{{host}}/v1/objects/{{account_id}}
-Authorization: Bearer {{auth_token}}
+DELETE https://{host}/v1/objects/{account_id}
+Authorization: Bearer {auth_token}
 ```
 
 Не рекомендуется так же отключать абонента. В "[Классической](type-classic.md)" схеме отключить / активировать
@@ -210,8 +210,8 @@ Authorization: Bearer {{auth_token}}
 При острой необходимости отключить абонента рекомендуется следующая последовательность действий:
 
 ```http request
-POST https://{{host}}/v1/objects/{{account_id}}/status
-Authorization: Bearer {{auth_token}}
+POST https://{host}/v1/objects/{account_id}/status
+Authorization: Bearer {auth_token}
 Content-Type: application/json
 
 {
@@ -222,8 +222,8 @@ Content-Type: application/json
 Абонент отключен, вы можете его включить обратно:
 
 ```http request
-POST https://{{host}}/v1/objects/{{account_id}}/status
-Authorization: Bearer {{auth_token}}
+POST https://{host}/v1/objects/{account_id}/status
+Authorization: Bearer {auth_token}
 Content-Type: application/json
 
 {
@@ -234,8 +234,8 @@ Content-Type: application/json
 Но пока у него минус на счету, абонент буде заболкирован. Достаточно вывести его счет в `0.00`, и абонент активируется:
 
 ```http request
-POST http://{{host}}/v1/objects/{{account_id}}/operations
-Authorization: Bearer {{auth_token}}
+POST http://{host}/v1/objects/{account_id}/operations
+Authorization: Bearer {auth_token}
 Accept: application/json
 
 {
